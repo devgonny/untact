@@ -31,9 +31,21 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/list")
 	@ResponseBody
-	public List<Article> showList(String searchKeyword) {
-		System.out.println("searchKeyword : "+ searchKeyword);
-		return articleService.getArticles(searchKeyword);
+	public List<Article> showList(String searchKeywordType, String searchKeyword) {
+		if (searchKeywordType != null) {
+			searchKeywordType = searchKeywordType.trim();
+		}
+		if( searchKeywordType == null || searchKeywordType.trim().length() == 0) {
+			searchKeywordType = "titleAndBody";
+		}
+		
+		if( searchKeyword != null && searchKeyword.length() == 0) {
+			searchKeyword = null;
+		}
+		if( searchKeyword != null) {
+			searchKeyword = searchKeyword.trim();
+		}
+		return articleService.getArticles(searchKeywordType, searchKeyword);
 	}
 
 	@RequestMapping("/usr/article/doAdd")
@@ -46,7 +58,7 @@ public class UsrArticleController {
 			return new ResultData("F-1", "body를 입력해주세요.");
 		}
 		
-		ResultData rsData = articleService.add(title, body);
+		ResultData rsData = articleService.addArticle(title, body);
 		
 		return rsData;
 
@@ -94,6 +106,6 @@ public class UsrArticleController {
 		if ( article == null) {
 			return new ResultData("F-1", "해당게시물은 존재하지 않습니다.");
 		}
-		return articleService.modify(id, title, body);
+		return articleService.modifyArticle(id, title, body);
 	}
 }
