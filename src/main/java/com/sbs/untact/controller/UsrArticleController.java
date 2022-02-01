@@ -31,8 +31,9 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/list")
 	@ResponseBody
-	public List<Article> showList() {
-		return articleService.getArticles();
+	public List<Article> showList(String searchKeyword) {
+		System.out.println("searchKeyword : "+ searchKeyword);
+		return articleService.getArticles(searchKeyword);
 	}
 
 	@RequestMapping("/usr/article/doAdd")
