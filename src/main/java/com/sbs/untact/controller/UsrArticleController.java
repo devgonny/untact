@@ -40,7 +40,7 @@ public class UsrArticleController {
 	}
 	@RequestMapping("/usr/article/list")
 	@ResponseBody
-	public ResultData showList(String searchKeywordType, String searchKeyword) {
+	public ResultData showList(String searchKeywordType, String searchKeyword, @RequestParam(defaultValue = "1") int page) {
 		if (searchKeywordType != null) {
 			searchKeywordType = searchKeywordType.trim();
 		}
@@ -58,8 +58,9 @@ public class UsrArticleController {
 		if ( searchKeyword == null) {
 			searchKeywordType = null;
 		}
-			
-		List<Article> articles = articleService.getForPrintArticles(searchKeywordType, searchKeyword);
+		
+		int itemsInAPage = 20; //한페이지 안에 몇개를 보여줄지
+		List<Article> articles = articleService.getForPrintArticles(searchKeywordType, searchKeyword, page, itemsInAPage);
 
 		return new ResultData("S-1", "성공", "articles", articles);
 	}
