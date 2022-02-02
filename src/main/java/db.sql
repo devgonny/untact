@@ -1,8 +1,31 @@
+# 데이터베이스 생성
+DROP DATABASE IF EXISTS untactTeacher;
+CREATE DATABASE untactTeacher;
+USE untactTeacher;
+# 게시물 테이블 생성
+CREATE TABLE article (
+    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME NOT NULL,
+    updateDate DATETIME NOT NULL,
+    title CHAR(100) NOT NULL,
+    `body` TEXT NOT NULL
+);
+# 게시물, 테스트 데이터 생성
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = "제목1 입니다.",
+`body` = "내용1 입니다.";
+INSERT INTO article
+SET regDate = NOW(),
+updateDate = NOW(),
+title = "제목2 입니다.",
+`body` = "내용2 입니다.";
+INSERT INTO article
 SET regDate = NOW(),
 updateDate = NOW(),
 title = "제목3 입니다.",
 `body` = "내용3 입니다.";
-
 # 회원 테이블 생성
 CREATE TABLE `member` (
     id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -15,10 +38,8 @@ CREATE TABLE `member` (
     `email` CHAR(100) NOT NULL,
     `cellphoneNo` CHAR(20) NOT NULL
 );
-
-# 로그인 ID로 검색했을 때-> unique(중복생성방지)걸었을때의 이점 회원id가 많을때 몇만배 검색속도가 빨라진다.
+# 로그인 ID로 검색했을 때
 ALTER TABLE `member` ADD UNIQUE INDEX (`loginId`);
-
 # 회원, 테스트 데이터 생성
 INSERT INTO `member`
 SET regDate = NOW(),
@@ -29,7 +50,19 @@ loginPw = "user1",
 nickname = "user1",
 cellphoneNo = "01012341234",
 email = "jangka512@gmail.com";
-
-DESC article;
 # 게시물 테이블에 회원번호 칼럼 추가
 ALTER TABLE article ADD COLUMN memberId INT(10) UNSIGNED NOT NULL AFTER updateDate;
+SELECT * FROM article;
+# 기존 게시물의 작성자를 회원1로 지정
+UPDATE article
+SET memberId = 1
+WHERE memberId = 0;
+
+/*
+insert into article
+(regDate, updateDate, memberId, title, `body`)
+SELECT NOW(), NOW(), FLOOR(RAND() * 2) + 1, CONCAT('제목_', FLOOR(RAND() * 1000) + 1), CONCAT('내용_', FLOOR(RAND() * 1000) + 1)
+from article;
+*/
+
+SELECT COUNT(*) FROM article;
