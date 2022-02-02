@@ -36,11 +36,10 @@
 	<insert id="addArticle" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO article
 		SET regDate = NOW(),
-		updateDate =
-		NOW(),
-		title =
-		#{title},
-		`body` = #{body}
+		updateDate = NOW(),
+		title = #{title},
+		`body` = #{body},
+		memberId = #{memberId}d
 	</insert>
 
 	<delete id="deleteArticle">
