@@ -73,35 +73,45 @@ public class UsrArticleController {
 		param.put("memberId", loginedMemberId);
 
 		return articleService.addArticle(param);
-
-		/*
-		 * Map<String, Object> rs = new HashMap<>(); rs.put("resultCode", "S-1");
-		 * rs.put("msg", "성공하였습니다."); rs.put("id", articlesLastId);
-		 * 
-		 * return rs;
-		 */
-		// mapOf를 쓰면 아래 코드로 가능!		
-//		return Util.mapOf("resultCode", "S-1", "msg", "성공하였습니다.", "id", articlesLastId);
-		// ResultData 클래스 생성해서 쓰면(이력서양식) 아래 코드로 가능!
 		
 	}
 
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public ResultData doDelete(int id) {
-		
+	public ResultData doDelete(Integer id, HttpSession session) {
+		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);
+
+		if (loginedMemberId == 0) {
+			return new ResultData("F-2", "로그인 후 이용해주세요.");
+		}
+
+		if (id == null) {
+			return new ResultData("F-1", "id를 입력해주세요.");
+		}
 		Article article = articleService.getArticle(id);
 		
 		if ( article == null) {
 			return new ResultData("F-1", "해당게시물은 존재하지 않습니다.");
+		}
+		
+		ResultData actorCanDeleteRd = articleService.getActorCanDeleteRd(article, loginedMemberId);
+
+		if (actorCanDeleteRd.isFail()) {
+			return actorCanDeleteRd;
 		}
 		return articleService.deleteArticle(id);
 	}
 
 	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
-	public ResultData doModify(Integer id, String title, String body) {
+	public ResultData doModify(Integer id, String title, String body, HttpSession session) {
+		int loginedMemberId = Util.getAsInt(session.getAttribute("loginedMemberId"), 0);
+
+		if (loginedMemberId == 0) {
+			return new ResultData("F-2", "로그인 후 이용해주세요.");
+		}
+
 		if (id == null) {
 			return new ResultData("F-1", "id를 입력해주세요.");
 		}
@@ -118,6 +128,14 @@ public class UsrArticleController {
 		if ( article == null) {
 			return new ResultData("F-1", "해당게시물은 존재하지 않습니다.");
 		}
+		
+		ResultData actorCanModifyRd = articleService.getActorCanModifyRd(article, loginedMemberId);
+
+		if (actorCanModifyRd.isFail()) {
+			return actorCanModifyRd;
+		}
+
+		
 		return articleService.modifyArticle(id, title, body);
 	}
 }

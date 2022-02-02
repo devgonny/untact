@@ -39,7 +39,7 @@
 		updateDate = NOW(),
 		title = #{title},
 		`body` = #{body},
-		memberId = #{memberId}d
+		memberId = #{memberId}
 	</insert>
 
 	<delete id="deleteArticle">
