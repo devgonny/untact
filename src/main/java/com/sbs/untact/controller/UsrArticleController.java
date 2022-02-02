@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sbs.untact.dto.Article;
+import com.sbs.untact.dto.Board;
 import com.sbs.untact.dto.ResultData;
 import com.sbs.untact.service.ArticleService;
 import com.sbs.untact.util.Util;
@@ -41,6 +42,13 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/list")
 	@ResponseBody
 	public ResultData showList(@RequestParam(defaultValue = "1") int boardId, String searchKeywordType, String searchKeyword, @RequestParam(defaultValue = "1") int page) {
+		
+		Board board = articleService.getBoard(boardId);
+
+		if ( board == null ) {
+			return new ResultData("F-1", "존재하지 않는 게시판 입니다.");
+		}
+		
 		if (searchKeywordType != null) {
 			searchKeywordType = searchKeywordType.trim();
 		}
