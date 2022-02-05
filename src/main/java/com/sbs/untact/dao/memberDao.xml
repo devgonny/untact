@@ -23,7 +23,8 @@
 	<select id="getMember" resultType="Member">
 		SELECT *
 		FROM `member`
-		WHERE loginId = #{id}
+		WHERE id = #{id}
+		
 	</select>
 
 	<select id="getMemberByLoginId" resultType="Member">
